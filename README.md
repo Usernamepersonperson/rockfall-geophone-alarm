@@ -7,6 +7,10 @@ with an audit trail.
 It runs entirely on **synthetic signals**. There is no real data in this repo, and it is **not a safety
 system** (see [Honest limits](#honest-limits)).
 
+![Three geophone traces from a simulated 14-minute scenario with STA/LTA triggers marked in amber, a row of true events (traffic, wind, animal, rockfall, debris flow) above them, and an alarm ribbon below that turns red only for the rockfall and the debris flow.](docs/figure.png)
+
+<sub>The `mixed` scenario (seed 1): three of the six stations, STA/LTA triggers and the alarm state. Synthetic signals.</sub>
+
 ## Why
 
 Alarm chains for natural hazards are mostly an exercise in reliability engineering, not in clever
