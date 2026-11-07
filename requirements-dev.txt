@@ -1,0 +1,3 @@
+-r requirements.txt
+pytest>=8
+paho-mqtt>=2.0  # optional, only for the MQTT sink

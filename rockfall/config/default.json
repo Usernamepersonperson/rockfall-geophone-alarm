@@ -1,0 +1,184 @@
+{
+  "site": "demo-gully",
+  "fs": 200,
+  "highpass_hz": 1.0,
+  "detector": {
+    "sta_s": 1.0,
+    "lta_s": 30.0,
+    "on": 4.0,
+    "off": 2.0,
+    "freeze_lta": true,
+    "max_trigger_s": 600.0,
+    "merge_gap_s": 3.0,
+    "min_trigger_s": 0.5
+  },
+  "association": {
+    "min_stations": 3,
+    "max_span_s": 150.0,
+    "rms_tol_base_s": 1.0,
+    "rms_tol_frac": 0.1,
+    "min_speed_ms": 1.0,
+    "max_speed_ms": 150.0,
+    "min_cos_downslope": 0.5
+  },
+  "classification": {
+    "window_s": 6.0,
+    "retry_s": 5.0,
+    "max_s": 60.0,
+    "rules": [
+      {
+        "name": "traffic",
+        "label": "traffic",
+        "doc": "Narrowband (engine harmonics), smooth envelope, 5-60 s.",
+        "conditions": {
+          "peakiness": [
+            12.0,
+            null
+          ],
+          "dom_freq_hz": [
+            6.0,
+            45.0
+          ],
+          "duration_s": [
+            5.0,
+            60.0
+          ],
+          "env_cv": [
+            null,
+            0.8
+          ]
+        }
+      },
+      {
+        "name": "debris_flow",
+        "label": "debris_flow",
+        "doc": "Long (>=25 s), low-frequency, non-impulsive rumble moving downslope at a few m/s.",
+        "conditions": {
+          "duration_s": [
+            25.0,
+            null
+          ],
+          "centroid_hz": [
+            null,
+            20.0
+          ],
+          "env_cv": [
+            null,
+            1.0
+          ],
+          "speed_ms": [
+            1.0,
+            12.0
+          ],
+          "cos_downslope": [
+            0.5,
+            null
+          ]
+        }
+      },
+      {
+        "name": "rockfall_moving",
+        "label": "rockfall",
+        "doc": "Short, impulsive (high crest factor, bursty envelope), broadband, not narrowband, front moving downslope at 5-150 m/s. Centroid >= 20 Hz separates local impacts from lower-frequency regional events.",
+        "conditions": {
+          "duration_s": [
+            1.0,
+            40.0
+          ],
+          "crest_factor": [
+            6.0,
+            null
+          ],
+          "env_cv": [
+            0.9,
+            null
+          ],
+          "peakiness": [
+            null,
+            12.0
+          ],
+          "speed_ms": [
+            5.0,
+            150.0
+          ],
+          "cos_downslope": [
+            0.5,
+            null
+          ],
+          "centroid_hz": [
+            20.0,
+            null
+          ]
+        }
+      },
+      {
+        "name": "rockfall_impact",
+        "label": "rockfall",
+        "doc": "Strongly impulsive broadband burst heard by the whole network at (almost) the same time: onsets travel at seismic speed, so no usable front speed. Stricter shape thresholds replace the speed test. Centroid >= 20 Hz keeps low-frequency distant quakes out.",
+        "conditions": {
+          "duration_s": [
+            1.0,
+            40.0
+          ],
+          "crest_factor": [
+            8.0,
+            null
+          ],
+          "env_cv": [
+            1.0,
+            null
+          ],
+          "peakiness": [
+            null,
+            12.0
+          ],
+          "speed_ms": [
+            150.0,
+            null
+          ],
+          "centroid_hz": [
+            20.0,
+            null
+          ]
+        }
+      },
+      {
+        "name": "simultaneous",
+        "label": "noise",
+        "doc": "Catch-all for near-simultaneous onsets that are not impulsive enough for rockfall_impact: wind gusts, regional quakes, electrical interference. Not a front moving on the slope.",
+        "conditions": {
+          "speed_ms": [
+            150.0,
+            null
+          ]
+        }
+      }
+    ]
+  },
+  "health": {
+    "window_s": 10.0,
+    "dead_std": 0.05,
+    "stuck_frac": 0.5,
+    "clip_level": 990.0,
+    "clip_frac": 0.02,
+    "gap_frac": 0.1
+  },
+  "alarm": {
+    "yellow_hold_s": 60.0,
+    "red_hold_s": 300.0,
+    "require_ack": false,
+    "min_healthy_stations": 4,
+    "degraded_recovery_s": 60.0,
+    "degraded_closes_road": false
+  },
+  "latency": {
+    "acquisition_block_s": 1.0,
+    "telemetry_s": 0.5,
+    "processing_s": 0.1,
+    "actuation_s": 1.0,
+    "budget_s": {
+      "rockfall": 30.0,
+      "debris_flow": 90.0
+    }
+  }
+}

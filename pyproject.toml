@@ -1,0 +1,24 @@
+[project]
+name = "rockfall-geophone-alarm"
+version = "0.1.0"
+description = "Multi-sensor rockfall / debris-flow alarm chain on synthetic geophone data"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = ["numpy>=1.26", "scipy>=1.11"]
+
+[project.optional-dependencies]
+mqtt = ["paho-mqtt>=2.0"]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["rockfall*"]
+
+[tool.setuptools.package-data]
+rockfall = ["config/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
